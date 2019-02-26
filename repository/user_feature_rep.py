@@ -28,3 +28,7 @@ def removeById(id: str):
 
 def removeByUserId(userId: str):
     mongo.db.userFeature.delete_many({'userId': userId})
+
+
+def removeByImageId(imageId: str):
+    mongo.db.userFeature.delete_many({"imageId": imageId})

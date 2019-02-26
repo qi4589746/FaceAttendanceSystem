@@ -1,9 +1,11 @@
-import face_recognition
-import cv2
-import repository.model_rep as modelRep
-import repository.subject_model_rep as subjectModelRep
 import pickle
 
+import cv2
+import face_recognition
+import numpy
+
+import repository.model_rep as modelRep
+import repository.subject_model_rep as subjectModelRep
 
 _subjectModels = {}
 
@@ -28,6 +30,7 @@ def _removeModelBySubjectId(subjectId: str):
 
 
 def _recognizeByImageAndSubjectId(subjectId: str, image, match_rate: float = 0.5, resize_rate: float = 0.5):
+    image = cv2.imdecode(numpy.fromstring(image.read(), numpy.uint8), cv2.IMREAD_COLOR)
     model = _subjectModels[subjectId]
     small_frame = cv2.resize(image, (0, 0), fx=resize_rate, fy=resize_rate)
     rgb_small_frame = small_frame[:, :, ::-1]
@@ -54,7 +57,7 @@ def _recognizeByFeatureAndSubjectId(subjectId: str, feature, match_rate: float =
 
     model = _subjectModels[subjectId]
     if len(feature) is not 128:
-        return None
+        return ""
     matches = face_recognition.compare_faces(model['encodings'], feature, tolerance=match_rate)
     if True in matches:
         matchedIdxs = [i for (i, b) in enumerate(matches) if b]
@@ -67,6 +70,7 @@ def _recognizeByFeatureAndSubjectId(subjectId: str, feature, match_rate: float =
 
 
 def _encodingFaceFeature(image, resize_rate: float = 0.5):
+    image = cv2.imdecode(numpy.fromstring(image.read(), numpy.uint8), cv2.IMREAD_COLOR)
     small_frame = cv2.resize(image, (0, 0), fx=resize_rate, fy=resize_rate)
     rgb_small_frame = small_frame[:, :, ::-1]
     face_locations = face_recognition.face_locations(rgb_small_frame)
@@ -76,3 +80,15 @@ def _encodingFaceFeature(image, resize_rate: float = 0.5):
     face_encodings = face_recognition.face_encodings(rgb_small_frame, face_locations)
     for face_encoding in face_encodings:
         return face_encoding
+
+
+def _hasOnlyOneFace(image, resize_rate: float = 0.5):
+    image = cv2.imdecode(numpy.fromstring(image.read(), numpy.uint8), cv2.IMREAD_COLOR)
+    image = cv2.resize(image, (0, 0), fx=resize_rate, fy=resize_rate)
+    rgb_small_frame = image[:, :, ::-1]
+    face_locations = face_recognition.face_locations(rgb_small_frame)
+    faceNum = len(face_locations)
+    if faceNum is not 1:
+        return False
+    else:
+        return True

@@ -15,3 +15,4 @@ CSRF_ENABLED = True
 CSRF_SESSION_KEY = "6zA3wNkfRm"
 
 # https://randomkeygen.com/
+UPLOAD_FOLDER_IMAGE = "./temp/image/"

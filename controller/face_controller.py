@@ -1,21 +1,49 @@
+from bson import json_util
 from flask import Blueprint, request
 from flask_api import status
-from bson import json_util
-import repository.user_rep as userRep
-import agent.content_type as ContentType
-import service.face_service as faceService
 
+import agent.content_type as ContentType
+import repository.user_rep as userRep
+import service.face_service as faceService
 
 mod = Blueprint('face_controller', __name__, url_prefix='/face_controller')
 
 
 @mod.route('/recognition/feature', methods=['PUT'])
 def recognitionByFeature():
+    """
+    put endpoint
+    ---
+    tags:
+      - faceController
+    parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          required:
+            - subjectId
+            - feature
+          properties:
+            subjectId:
+              type: string
+              description: The subject's id.
+            feature:
+              type: array
+              default: []
+              items:
+                type: number
+              description: face features
+    responses:
+      200:
+        description: The response from recognition service
+        schema:
+    """
     feature = request.json['feature']
     subjectId = request.json['subjectId']
     # 辨識拿到userId
     userId = faceService._recognizeByFeatureAndSubjectId(subjectId=subjectId, feature=feature)
-    if userId is None:
+    if userId is "":
         return 'not found this people in the subject', status.HTTP_404_NOT_FOUND
     else:
         user = userRep.findById(userId)
@@ -24,15 +52,41 @@ def recognitionByFeature():
 
 @mod.route('/recognition/faceImage', methods=['PUT'])
 def recognitionByFaceImage():
-    faceImage = request.json['faceImage']
+    """
+    put endpoint
+    ---
+    tags:
+      - faceController
+    parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          required:
+            - subjectId
+            - feature
+          properties:
+            subjectId:
+              type: string
+              description: The subject's id.
+      - name: faceImage
+        in: form
+        require: true
+        type: file
+    responses:
+      200:
+        description: The response from recognition service
+        schema:
+    """
+    faceImage = request.form['faceImage']
     subjectId = request.json['subjectId']
     # 先抓出faceFeature...
     feature = faceService._encodingFaceFeature(faceImage)
-    if feature is None:
+    if feature is "":
         return 'This picture has multiple/no face', status.HTTP_404_NOT_FOUND
     # 辨識拿到userId...
     userId = faceService._recognizeByFeatureAndSubjectId(subjectId=subjectId, feature=feature)
-    if userId is None:
+    if userId is "":
         return 'not found this people in the subject', status.HTTP_404_NOT_FOUND
     else:
         user = userRep.findById(userId)

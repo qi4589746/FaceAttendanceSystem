@@ -1,20 +1,40 @@
 from flask import Blueprint, request
-from agent import id_generator as ig
-from agent import time_generator as tg
 from flask_api import status
-from domain.subject_model import SubjectModel
-import repository.subject_model_rep as subjectModelRep
+
 import repository.model_rep as modelRep
+import repository.subject_model_rep as subjectModelRep
 import repository.subject_user_rep as subjectUserRep
 import repository.user_feature_rep as userFeatureRep
-import pickle
-
+from agent import id_generator as ig
+from agent import time_generator as tg
+from domain.subject_model import SubjectModel
 
 mod = Blueprint('subject_model_controller', __name__, url_prefix='/subjectModelController')
 
 
 @mod.route('/subjectModel', methods=['GET'])
 def getSubjectModel():
+    """
+    delete endpoint
+    ---
+    tags:
+      - subjectModelController
+    parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          required:
+            - subjectId
+          properties:
+            subjectId:
+              type: string
+              description: The subject's id.
+    responses:
+      200:
+        description: The response from subject_model_controller
+        schema:
+    """
     subjectId = request.json['subjectId']
     subjectModel = subjectModelRep.findBySubjectId(subjectId)
     model = modelRep.findByFileId(subjectModel['modelId'])
@@ -23,6 +43,27 @@ def getSubjectModel():
 
 @mod.route('/subjectModel', methods=['POST'])
 def updateSubjectModel():
+    """
+    post endpoint
+    ---
+    tags:
+      - subjectModelController
+    parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          required:
+            - subjectId
+          properties:
+            subjectId:
+              type: string
+              description: The subject's id.
+    responses:
+      200:
+        description: The response from subject_model_controller
+        schema:
+    """
     subjectId = request.json['subjectId']
     users = subjectUserRep.findBySubjectId(subjectId)
     userIds = []
