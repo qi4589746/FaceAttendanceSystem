@@ -44,7 +44,9 @@ def postUserImage():
     """
     userId = request.form['userId']
     image = request.files['image']
-    imageId = ig.generateId('faceImage')
+    imageType = image.content_type
+    imageId = ig.generateId('faceImage') + '.' + imageType.split('/')[1]
+    print(imageId)
     image.save(os.path.join(app.config['UPLOAD_FOLDER_IMAGE'], imageId))
     image = cv2.imread(app.config['UPLOAD_FOLDER_IMAGE'] + imageId)
     if userId is "" or image is None:

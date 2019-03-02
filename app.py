@@ -39,6 +39,10 @@ from controller.user_image_con import mod as userImageModule
 
 app.register_blueprint(userImageModule)
 
+from controller.image_con import mod as imageModule
+
+app.register_blueprint(imageModule)
+
 swag = Swagger(app)
 # app.run(debug=True)
 import service.face_service as faceService
