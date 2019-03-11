@@ -11,7 +11,7 @@ from controller.user_con import mod as userModule
 
 app.register_blueprint(userModule)
 
-from controller.face_controller import mod as faceModule
+from controller.face_con import mod as faceModule
 
 app.register_blueprint(faceModule)
 

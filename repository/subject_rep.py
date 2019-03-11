@@ -9,7 +9,7 @@ def save(subject:Subject):
 
 
 def findById(id: str):
-    subject = [doc for doc in mongo.db.subject.find({"id": id})]
+    subject = mongo.db.subject.find_one({"id": id})
     return subject
 
 
@@ -23,8 +23,9 @@ def removeById(id: str):
 
 
 def update(subject: Subject):
-    message = mongo.db.subjectModel.update({'_id': subject['_id']},
-                                           {'$set': {'name': subject['name'],
+    print(subject)
+    message = mongo.db.subject.update({'_id': subject['_id']},
+                                      {'$set': {'name': subject['name'],
                                                      'updateTime': tg.getNowAsMilli()}},
-                                           upsert=False, multi=False)
+                                      upsert=False)
     return message

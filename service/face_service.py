@@ -1,5 +1,3 @@
-import pickle
-
 import cv2
 import face_recognition
 import numpy
@@ -12,16 +10,15 @@ _subjectModels = {}
 
 def _updateAllModel():
     for subjectModel in subjectModelRep.findAll():
-        model = modelRep.findByFileId(subjectModel['modelId'])
+        model = modelRep.findById(subjectModel['modelId'])
         # model 須做處理，轉成辨識的使用資料型態，現在為file
-        model = pickle.load(model)
+        print(model)
         _subjectModels.update({subjectModel['subjectId']: model})
 
 
 def _updateModelBySubjectId(subjectId: str):
     subjectModel = subjectModelRep.findBySubjectId(subjectId)
-    model = modelRep.findByFileId(subjectModel['modelId'])
-    model = pickle.load(model)
+    model = modelRep.findById(subjectModel['modelId'])
     _subjectModels.update({subjectModel.subjectId: model})
 
 
@@ -54,10 +51,10 @@ def _recognizeByImageAndSubjectId(subjectId: str, image, match_rate: float = 0.5
 
 
 def _recognizeByFeatureAndSubjectId(subjectId: str, feature, match_rate: float = 0.5):
-
+    userId = None
     model = _subjectModels[subjectId]
     if len(feature) is not 128:
-        return ""
+        return None
     matches = face_recognition.compare_faces(model['encodings'], feature, tolerance=match_rate)
     if True in matches:
         matchedIdxs = [i for (i, b) in enumerate(matches) if b]

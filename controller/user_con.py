@@ -49,7 +49,7 @@ def createUser():
         userId = ig.generateId('user')
     else:
         user = userRep.findById(userId)
-        if user is not "":
+        if user is not None:
             return '', 226
     user = User(id=userId, name=userName, createTime=tg.getNowAsMilli(), updateTime=tg.getNowAsMilli())
     user = userRep.save(user)
@@ -83,7 +83,7 @@ def getUserById():
     if userId is "":
         return '', status.HTTP_400_BAD_REQUEST
     user = userRep.findById(userId)
-    return json_util.dumps({'user': user.__dict__}), status.HTTP_200_OK, ContentType.json
+    return json_util.dumps({'user': user}), status.HTTP_200_OK, ContentType.json
 
 
 @mod.route('/allUser', methods=['GET'])

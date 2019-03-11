@@ -1,6 +1,7 @@
+from agent import time_generator as tg
 from agent.db import mongo
 from domain.user import User
-from agent import time_generator as tg
+
 
 def save(user: User):
     user._id = mongo.db.user.insert_one(user.__dict__).inserted_id

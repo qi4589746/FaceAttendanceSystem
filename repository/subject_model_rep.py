@@ -1,7 +1,7 @@
+import repository.model_rep as modelRep
+from agent import time_generator as tg
 from agent.db import mongo
 from domain.subject_model import SubjectModel
-from agent import time_generator as tg
-import repository.model_rep as modelRep
 
 
 def save(subjectModel: SubjectModel):
@@ -30,8 +30,9 @@ def removeById(id: str):
 
 def removeBySubjectId(subjectId: str):
     subjectModel = findBySubjectId(subjectId)
-    modelRep.removeById(subjectModel['modelId'])
-    mongo.db.subjectModel.delete_one({'subjectId': subjectId})
+    if subjectModel is not None:
+        modelRep.removeById(subjectModel['modelId'])
+        mongo.db.subjectModel.delete_one({'subjectId': subjectId})
 
 
 def update(subjectModel: SubjectModel):

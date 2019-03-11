@@ -43,8 +43,15 @@ def createSubject():
     """
     subjectName = request.json['subjectName']
     subjectId = request.json['subjectId']
+
     if subjectId is "":
         subjectId = ig.generateId('subject')
+    else:
+        subject = subjectRep.findById(subjectId)
+        print(subject)
+        if subject is not None:
+            return '', 226
+
     subject = Subject(id=subjectId,
                       name=subjectName,
                       createTime=tg.getNowAsMilli(),

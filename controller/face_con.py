@@ -6,7 +6,7 @@ import agent.content_type as ContentType
 import repository.user_rep as userRep
 import service.face_service as faceService
 
-mod = Blueprint('face_controller', __name__, url_prefix='/face_controller')
+mod = Blueprint('face_controller', __name__, url_prefix='/faceController')
 
 
 @mod.route('/recognition/feature', methods=['PUT'])
@@ -78,11 +78,11 @@ def recognitionByFaceImage():
         description: The response from recognition service
         schema:
     """
-    faceImage = request.form['faceImage']
-    subjectId = request.json['subjectId']
+    faceImage = request.files['faceImage']
+    subjectId = request.form['subjectId']
     # 先抓出faceFeature...
     feature = faceService._encodingFaceFeature(faceImage)
-    if feature is "":
+    if feature is None:
         return 'This picture has multiple/no face', status.HTTP_404_NOT_FOUND
     # 辨識拿到userId...
     userId = faceService._recognizeByFeatureAndSubjectId(subjectId=subjectId, feature=feature)

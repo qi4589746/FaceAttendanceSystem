@@ -1,16 +1,16 @@
 from agent.db import mongo
+from domain.model import Model
 
 
-def save(fileId: str, file):
-    mongo.save_file(fileId, file, base="model")
+def save(model: Model):
+    model._id = mongo.db.model.insert_one(model.__dict__).inserted_id
+    return model
 
 
-def findByFileId(fileId: str):
-    return mongo.send_file(fileId, base="model")
+def findById(id: str):
+    model = mongo.db.model.find_one({"id": id})
+    return model
 
 
-def removeById(fileId: str):
-    """
-    implement the method
-    """
-    pass
+def removeById(id: str):
+    mongo.db.model.delete_one({"id": id})
