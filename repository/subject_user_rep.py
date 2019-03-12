@@ -2,7 +2,7 @@ from agent.db import mongo
 from domain.subject_user import SubjectUser
 
 
-def save(subjectUser:SubjectUser):
+def save(subjectUser: SubjectUser):
     subjectUser._id = mongo.db.subjectUser.insert_one(subjectUser.__dict__).inserted_id
     return subjectUser
 
@@ -10,6 +10,12 @@ def save(subjectUser:SubjectUser):
 def findBySubjectIdAndUserId(subjectId: str, userId: str):
     subjectUser = mongo.db.subjectUser.find_one({"subjectId": subjectId, "userId": userId})
     return subjectUser
+
+
+def isAuthorizedBySubjectIdAndUserId(subjectId: str, userId: str):
+    if mongo.db.subjectUser.find_one({"subjectId": subjectId, "userId": userId, "role": 1}) is not None:
+        return True
+    return False
 
 
 def findBySubjectId(id: str):

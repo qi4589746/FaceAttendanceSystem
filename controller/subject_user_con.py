@@ -38,13 +38,16 @@ def createSubjectUser():
         description: The response from subject_user_controller
         schema:
     """
-    userId = request.json['userId']
+    adminId = request.json['adminId']
     subjectId = request.json['subjectId']
+    if not subjectUserRep.isAuthorizedBySubjectIdAndUserId(subjectId=subjectId, userId=adminId):
+        return "Is not Authorized!", status.HTTP_401_UNAUTHORIZED
+    userId = request.json['userId']
     subjectUser = subjectUserRep.findBySubjectIdAndUserId(subjectId, userId)
     if subjectUser is not None:
         return json_util.dumps({'subjectUser': subjectUser}), status.HTTP_201_CREATED, ContentType.json
     else:
-        subjectUser = SubjectUser(id=ig.generateId('subjectUser'), userId=userId, subjectId=subjectId,
+        subjectUser = SubjectUser(id=ig.generateId('subjectUser'), userId=userId, subjectId=subjectId, role=2,
                                   createTime=tg.getNowAsMilli(), updateTime=tg.getNowAsMilli())
         subjectUser = subjectUserRep.save(subjectUser)
         return json_util.dumps({'subjectUser': subjectUser.__dict__}), status.HTTP_200_OK, ContentType.json

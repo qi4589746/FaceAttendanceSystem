@@ -67,7 +67,10 @@ def updateSubjectModel():
         description: The response from subject_model_controller
         schema:
     """
+    adminId = request.json['admin']
     subjectId = request.json['subjectId']
+    if not subjectUserRep.isAuthorizedBySubjectIdAndUserId(subjectId=subjectId, userId=adminId):
+        return "Is not Authorized!", status.HTTP_401_UNAUTHORIZED
     users = subjectUserRep.findBySubjectId(subjectId)
     print(users)
     userIds = []

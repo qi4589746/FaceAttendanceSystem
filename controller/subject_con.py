@@ -7,9 +7,11 @@ import repository.subject_model_rep as subjectModelRep
 import repository.subject_rep as subjectRep
 import repository.subject_user_rep as subjectUserRep
 import repository.tracking_rep as trackingRep
+import repository.user_rep as userRep
 from agent import id_generator as ig
 from agent import time_generator as tg
 from domain.subject import Subject
+from domain.subject_user import SubjectUser
 
 mod = Blueprint('subject_controller', __name__, url_prefix='/subjectController')
 
@@ -43,7 +45,10 @@ def createSubject():
     """
     subjectName = request.json['subjectName']
     subjectId = request.json['subjectId']
+    adminId = request.json['adminId']
 
+    if userRep.findById(adminId) is None:
+        return "Not this user", status.HTTP_404_NOT_FOUND
     if subjectId is "":
         subjectId = ig.generateId('subject')
     else:
@@ -57,6 +62,9 @@ def createSubject():
                       createTime=tg.getNowAsMilli(),
                       updateTime=tg.getNowAsMilli())
     subject = subjectRep.save(subject)
+    subjectUser = SubjectUser(id=ig.generateId('subjectUser'), userId=adminId, subjectId=subjectId, role=1,
+                              createTime=tg.getNowAsMilli(), updateTime=tg.getNowAsMilli())
+    subjectUserRep.save(subjectUser)
     return json_util.dumps({'subject': subject.__dict__}), status.HTTP_200_OK, ContentType.json
 
 
@@ -83,7 +91,11 @@ def getSubjectBySubjectId():
         description: The response from subject_controller
         schema:
     """
+    adminId = request.json['adminId']
+
     subjectId = request.json['subjectId']
+    if not subjectUserRep.isAuthorizedBySubjectIdAndUserId(subjectId=subjectId, userId=adminId):
+        return "Is not Authorized!", status.HTTP_401_UNAUTHORIZED
     subject = subjectRep.findById(subjectId)
     return json_util.dumps({'subject': subject}), status.HTTP_200_OK, ContentType.json
 
@@ -149,7 +161,10 @@ def removeSubjectAndRelationDataBySubjectId():
         description: The response from subject_controller
         schema:
     """
+    adminId = request.json['adminId']
     subjectId = request.json['subjectId']
+    if not subjectUserRep.isAuthorizedBySubjectIdAndUserId(subjectId=subjectId, userId=adminId):
+        return "Is not Authorized!", status.HTTP_401_UNAUTHORIZED
     subjectModelRep.removeBySubjectId(subjectId)
     subjectUserRep.removeBySubjectId(subjectId)
     trackingRep.removeBySubjectId(subjectId)
