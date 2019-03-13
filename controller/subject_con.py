@@ -53,7 +53,6 @@ def createSubject():
         subjectId = ig.generateId('subject')
     else:
         subject = subjectRep.findById(subjectId)
-        print(subject)
         if subject is not None:
             return '', 226
 
@@ -92,7 +91,6 @@ def getSubjectBySubjectId():
         schema:
     """
     adminId = request.json['adminId']
-
     subjectId = request.json['subjectId']
     if not subjectUserRep.isAuthorizedBySubjectIdAndUserId(subjectId=subjectId, userId=adminId):
         return "Is not Authorized!", status.HTTP_401_UNAUTHORIZED

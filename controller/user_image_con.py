@@ -46,7 +46,6 @@ def postUserImage():
     image = request.files['image']
     imageType = image.content_type
     imageId = ig.generateId('faceImage') + '.' + imageType.split('/')[1]
-    print(imageId)
     image.save(os.path.join(app.config['UPLOAD_FOLDER_IMAGE'], imageId))
     image = cv2.imread(app.config['UPLOAD_FOLDER_IMAGE'] + imageId)
     if userId is "" or image is None:
@@ -126,7 +125,6 @@ def removeUserImageById():
 
 
 def detectFace(image, resize_rate: float = 0.5):
-    # print(image)
     # _image = cv2.imdecode(numpy.fromstring(image, numpy.uint8), cv2.IMREAD_COLOR)
     _image = cv2.resize(image, (0, 0), fx=resize_rate, fy=resize_rate)
     rgb_small_frame = _image[:, :, ::-1]
@@ -141,7 +139,6 @@ def detectFace(image, resize_rate: float = 0.5):
 # image = cv2.imdecode(numpy.fromstring(image, numpy.uint8), cv2.IMREAD_COLOR)
 # cv2.error: OpenCV(4.0.0) /io/opencv/modules/imgcodecs/src/loadsave.cpp:725: error: (-215:Assertion failed) !buf.empty() && buf.isContinuous() in function 'imdecode_'
 def encodingFaceAndUploadDatabase(userId, imageId, image, resize_rate: float = 0.5):
-    # print(image)
     # _image = cv2.imdecode(numpy.fromstring(image, numpy.uint8), cv2.IMREAD_COLOR)
     _image = cv2.resize(image, (0, 0), fx=resize_rate, fy=resize_rate)
     rgb_small_frame = _image[:, :, ::-1]

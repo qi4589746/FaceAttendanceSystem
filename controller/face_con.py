@@ -1,3 +1,5 @@
+import time
+
 from bson import json_util
 from flask import Blueprint, request
 from flask_api import status
@@ -58,17 +60,10 @@ def recognitionByFaceImage():
     tags:
       - faceController
     parameters:
-      - name: body
-        in: body
-        required: true
-        schema:
-          required:
-            - subjectId
-            - feature
-          properties:
-            subjectId:
-              type: string
-              description: The subject's id.
+      - name: subjectId
+        in: form
+        require: true
+        type: text
       - name: faceImage
         in: form
         require: true
@@ -78,6 +73,7 @@ def recognitionByFaceImage():
         description: The response from recognition service
         schema:
     """
+    tStart = time.time()
     faceImage = request.files['faceImage']
     subjectId = request.form['subjectId']
     # 先抓出faceFeature...
@@ -86,6 +82,8 @@ def recognitionByFaceImage():
         return 'This picture has multiple/no face', status.HTTP_404_NOT_FOUND
     # 辨識拿到userId...
     userId = faceService._recognizeByFeatureAndSubjectId(subjectId=subjectId, feature=feature)
+    tEnd = time.time()
+    print(tEnd - tStart)
     if userId is "":
         return 'not found this people in the subject', status.HTTP_404_NOT_FOUND
     else:

@@ -71,9 +71,6 @@ def getSubjectUserBySubjectId():
             subjectId:
               type: string
               description: The subject's id.
-            userId:
-              type: string
-              description: The user's id.
     responses:
       200:
         description: The response from subject_user_controller
@@ -81,6 +78,34 @@ def getSubjectUserBySubjectId():
     """
     subjectId = request.json['subjectId']
     subjectUsers = subjectUserRep.findBySubjectId(subjectId)
+    return json_util.dumps({'subjectUsers': subjectUsers}), status.HTTP_200_OK, ContentType.json
+
+
+@mod.route('/mySubjectUser', methods=['GET'])
+def getSubjectUserByAdminId():
+    """
+    get endpoint
+    ---
+    tags:
+      - subjectUserController
+    parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          required:
+            - adminId
+          properties:
+            adminId:
+              type: string
+              description: The admin's id.
+    responses:
+      200:
+        description: The response from subject_user_controller
+        schema:
+    """
+    adminId = request.json['adminId']
+    subjectUsers = subjectUserRep.findByAdminId(adminId)
     return json_util.dumps({'subjectUsers': subjectUsers}), status.HTTP_200_OK, ContentType.json
 
 

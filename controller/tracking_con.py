@@ -63,28 +63,26 @@ def trackingByFaceImage():
     tags:
       - trackingController
     parameters:
-      - name: body
-        in: body
-        required: true
-        schema:
-          required:
-            - subjectId
-          properties:
-            subjectId:
-              type: string
-              description: The subject's id.
-      - name: image
+      - name: subjectId
         in: form
-        required: true
+        require: true
+        type: text
+      - name: deviceMacAddress
+        in: form
+        require: true
+        type: text
+      - name: faceImage
+        in: form
+        require: true
         type: file
     responses:
       200:
         description: The response from tracking_controller
         schema:
     """
-    faceImage = request.files['faceImage'].read()
-    subjectId = request.json['subjectId']
-    deviceMacAddress = request.json['deviceMacAddress']
+    faceImage = request.files['faceImage']
+    subjectId = request.form['subjectId']
+    deviceMacAddress = request.form['deviceMacAddress']
     # 先抓出faceFeature...
     feature = faceService._encodingFaceFeature(faceImage)
     if feature is "":

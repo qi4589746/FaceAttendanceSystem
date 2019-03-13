@@ -7,6 +7,7 @@ import repository.model_rep as modelRep
 import repository.subject_model_rep as subjectModelRep
 import repository.subject_user_rep as subjectUserRep
 import repository.user_feature_rep as userFeatureRep
+import service.face_service as FaceService
 from agent import id_generator as ig
 from agent import time_generator as tg
 from domain.model import Model
@@ -67,12 +68,11 @@ def updateSubjectModel():
         description: The response from subject_model_controller
         schema:
     """
-    adminId = request.json['admin']
+    adminId = request.json['adminId']
     subjectId = request.json['subjectId']
     if not subjectUserRep.isAuthorizedBySubjectIdAndUserId(subjectId=subjectId, userId=adminId):
         return "Is not Authorized!", status.HTTP_401_UNAUTHORIZED
     users = subjectUserRep.findBySubjectId(subjectId)
-    print(users)
     userIds = []
     modelUsers = []
     modelFeature = []
@@ -85,8 +85,8 @@ def updateSubjectModel():
             modelFeature.append(userFeature['feature'])
     model = Model(id=ig.generateId('model'), userIds=modelUsers, encodings=modelFeature, createTime=tg.getNowAsMilli(),
                   updateTime=tg.getNowAsMilli())
-    print(model)
     createAndUpdateSubjectModel(subjectId=subjectId, model=model)
+    FaceService._updateModelBySubjectId(subjectId)
     return subjectId, status.HTTP_200_OK
 
 

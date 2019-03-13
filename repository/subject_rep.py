@@ -23,7 +23,6 @@ def removeById(id: str):
 
 
 def update(subject: Subject):
-    print(subject)
     message = mongo.db.subject.update({'_id': subject['_id']},
                                       {'$set': {'name': subject['name'],
                                                      'updateTime': tg.getNowAsMilli()}},

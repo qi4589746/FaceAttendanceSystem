@@ -12,14 +12,13 @@ def _updateAllModel():
     for subjectModel in subjectModelRep.findAll():
         model = modelRep.findById(subjectModel['modelId'])
         # model 須做處理，轉成辨識的使用資料型態，現在為file
-        print(model)
         _subjectModels.update({subjectModel['subjectId']: model})
 
 
 def _updateModelBySubjectId(subjectId: str):
     subjectModel = subjectModelRep.findBySubjectId(subjectId)
     model = modelRep.findById(subjectModel['modelId'])
-    _subjectModels.update({subjectModel.subjectId: model})
+    _subjectModels.update({subjectId: model})
 
 
 def _removeModelBySubjectId(subjectId: str):
