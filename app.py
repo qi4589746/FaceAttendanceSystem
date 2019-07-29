@@ -43,6 +43,10 @@ from controller.image_con import mod as imageModule
 
 app.register_blueprint(imageModule)
 
+from controller.streaming_con import mod as streamingModule
+
+app.register_blueprint(streamingModule)
+
 swag = Swagger(app)
 # app.run(debug=True)
 import service.face_service as faceService
