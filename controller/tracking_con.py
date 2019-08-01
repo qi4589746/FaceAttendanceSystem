@@ -91,7 +91,7 @@ def trackingByFaceImage():
     userId = faceService._recognizeByFeatureAndSubjectId(subjectId=subjectId, feature=feature)
     if userId is "":
         return 'not found this people in the subject', status.HTTP_404_NOT_FOUND
-    tracking = Tracking(id=ig.generateId('tracking'), userId=userId,subjectId=subjectId,
+    tracking = Tracking(id=ig.generateId('tracking'), userId=userId, subjectId=subjectId,
                         createTime=tg.getNowAsMilli(), deviceMacAddress=deviceMacAddress)
     trackingRep.save(tracking)
     return json_util.dumps({'tracking': tracking.__dict__}), status.HTTP_200_OK, ContentType.json

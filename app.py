@@ -51,6 +51,11 @@ import service.face_service as faceService
 faceService._updateAllModel()
 
 #
+import service.demo_service as demoService
+
+demoService._initializationDatabase()
+
+#
 from controller.videoSocket_con import videoStream
 
 sockets.register_blueprint(videoStream)

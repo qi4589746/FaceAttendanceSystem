@@ -30,6 +30,7 @@
       <option name="ignoredIdentifiers">
         <list>
           <option value="dict.__getitem__" />
+          <option value="domain.user.User.*" />
         </list>
       </option>
     </inspection_tool>

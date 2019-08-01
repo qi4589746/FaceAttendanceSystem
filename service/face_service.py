@@ -88,3 +88,12 @@ def _hasOnlyOneFace(image, resize_rate: float = 0.5):
         return False
     else:
         return True
+
+
+def _getFacesData(image):
+    image = cv2.cvtColor(numpy.array(image), cv2.COLOR_BGR2RGB)
+    # small_frame = cv2.resize(image, (0, 0), fx=1, fy=)
+    rgb_frame = image[:, :, ::-1]
+    face_locations = face_recognition.face_locations(rgb_frame)
+    face_encodings = face_recognition.face_encodings(rgb_frame, face_locations)
+    return zip(face_locations, face_encodings)

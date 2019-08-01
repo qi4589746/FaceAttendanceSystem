@@ -2,8 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6a0bcd03-211f-45a2-959f-be74807ea132" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/service/demo_service.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controller/tracking_con.py" beforeDir="false" afterPath="$PROJECT_DIR$/controller/tracking_con.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/controller/videoSocket_con.py" beforeDir="false" afterPath="$PROJECT_DIR$/controller/videoSocket_con.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domain/user.py" beforeDir="false" afterPath="$PROJECT_DIR$/domain/user.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/face_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/service/face_service.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -178,7 +184,7 @@
       <workItem from="1564395463196" duration="2552000" />
       <workItem from="1564469729756" duration="687000" />
       <workItem from="1564479105981" duration="3457000" />
-      <workItem from="1564542442285" duration="821000" />
+      <workItem from="1564542442285" duration="21104000" />
     </task>
     <task id="LOCAL-00001" summary="[更新] 解決sileStore read()只能使用一次的問題，及gridFS無法正常搜尋刪除問題">
       <created>1551175335953</created>
@@ -215,7 +221,14 @@
       <option name="project" value="LOCAL" />
       <updated>1564502300581</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="[更新] 加入register interface">
+      <created>1564543338454</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1564543338454</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -242,13 +255,25 @@
     <MESSAGE value="[更新-V0.1] 完整測試過一次" />
     <MESSAGE value="[更新] subjectUser加入Role，以便管理subject的控制與角色" />
     <MESSAGE value="[更新] 加入WebSocket，並且可接收Base64的圖像" />
-    <option name="LAST_COMMIT_MESSAGE" value="[更新] 加入WebSocket，並且可接收Base64的圖像" />
+    <MESSAGE value="[更新] 加入register interface" />
+    <option name="LAST_COMMIT_MESSAGE" value="[更新] 加入register interface" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/controller/videoSocket_con.py</url>
+          <line>64</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/FaceBackend$app.coverage" NAME="app Coverage Results" MODIFIED="1564386997322" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/faceBackend$Flask__app_py_.coverage" NAME="Flask (app.py) Coverage Results" MODIFIED="1564503441646" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/faceBackend$Flask__app_py_.coverage" NAME="Flask (app.py) Coverage Results" MODIFIED="1564632712901" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/FaceBackend$FaceBackend.coverage" NAME="FaceBackend Coverage Results" MODIFIED="1564387533345" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/FaceBackend$Flask__app_py_.coverage" NAME="Flask (app.py) Coverage Results" MODIFIED="1564387537951" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/faceBackend$FaceBackend.coverage" NAME="FaceBackend Coverage Results" MODIFIED="1564396101728" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
