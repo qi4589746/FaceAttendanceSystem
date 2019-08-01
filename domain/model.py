@@ -1,6 +1,4 @@
 class Model:
-    userIds: list
-    encodings: list
 
     def __init__(self, id: str, userIds: list, encodings: list, createTime: int, updateTime: int):
         self.encodings = encodings
