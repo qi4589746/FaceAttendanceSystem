@@ -19,6 +19,7 @@ from domain.model import Model
 from domain.subject_model import SubjectModel
 from domain.subject_user import SubjectUser
 from domain.user import User
+from domain.user_feature import UserFeature
 
 videoStream = Blueprint(r'videoStream', __name__, url_prefix=r'/videoStream')
 
@@ -55,24 +56,19 @@ class FaceContentJSONEncoder(json.JSONEncoder):
             return obj.__jsonencode__()
         return json.JSONEncoder.default(self, obj)
 
-    # ws://127.0.0.1:5000/videoStream/register_demo
 
-
+# ws://127.0.0.1:5000/videoStream/register_demo
 @videoStream.route('/register_demo')
 def registerUser_demo(socket):
     userList = []
     counter = 0
+    waitFrame = 5
     featureLimit = 5
     message = socket.receive()
     message = eval(message)
-    print(message)
-    print(type(message))
     try:
         userName = message['name']
-        print(userName)
         description = message['description']
-        print(description)
-        # subjectId = message['subjectId']
         subjectId = 'demoSubject'
         if not (len(description) > 0) or not (len(userName) > 0):
             socket.send(str(Message(1, 'userName and description cannot be empty!').__dict__))
@@ -84,15 +80,38 @@ def registerUser_demo(socket):
             subjectUser = SubjectUser(id=ig.generateId('subjectUser'), userId=user.id, subjectId=subjectId,
                                       createTime=tg.getNowAsMilli(), updateTime=tg.getNowAsMilli(), role=2)
             subjectUserRep.save(subjectUser)
+            # print(str(Message(0, 'OK').__dict__))
             socket.send(str(Message(0, 'OK').__dict__))
+            theFirst = True
+            registerFeature = []
             while not socket.closed:
                 try:
                     message = socket.receive()
                     data = message.split(',')[1]
                     image = stringToImage(data)
-                    print(type(image))
-                    print(image.shape)
-                    socket.send(str(image.shape))
+                    facesData = faceService._getFacesData(image)
+                    if len(facesData) == 1:
+                        if theFirst:
+                            registerFeature.append(facesData[0][1])
+                            featureLimit -= 1
+                            theFirst = False
+                        counter += 1
+                        if counter == waitFrame:
+                            counter = 0
+                            if faceService._compareFeature(registerFeature[0], facesData[0][1]) < 0.5:
+                                registerFeature.append(facesData[0][1])
+                                featureLimit -= 1
+                        if featureLimit == 0:
+                            for faceFeature in registerFeature:
+                                userFeature = UserFeature(id=ig.generateId('userFeature'), userId=user.id,
+                                                          imageId="systemCreated", createTime=tg.getNowAsMilli(),
+                                                          feature=faceFeature.tolist(), updateTime=tg.getNowAsMilli())
+                                userFeatureRep.save(userFeature)
+                                updateSubjectModel(subjectId)
+                            socket.send(str(Message(0, 'Completed').__dict__))
+                            break
+                    else:
+                        socket.send(str(Message(1, 'There is not only one person!').__dict__))
                 except Exception as e:
                     try:
                         socket.send(str(e))
@@ -113,6 +132,7 @@ def registerUser_demo(socket):
 # ws://127.0.0.1:5000/videoStream/recognition_demo
 @videoStream.route('/recognition_demo')
 def recognitionUser_demo(socket):
+    subjectId = 'demoSubject'
     socket.send(str(Message(0, 'OK').__dict__))
     while not socket.closed:
         userList = []
@@ -127,8 +147,17 @@ def recognitionUser_demo(socket):
                 y = top
                 h = bottom - top
                 w = right - left
-                faceContent = FaceContent(id="id", name='name', x=x, y=y, h=h, w=w, description="description")
-                userList.append(faceContent)
+                userId = faceService._recognizeByFeatureAndSubjectId(feature=faceData[1], subjectId=subjectId,
+                                                                     match_rate=0.5)
+                if userId is not None:
+                    user = userRep.findById(userId)
+                    faceContent = FaceContent(id=user['id'], name=user['name'], x=x, y=y, h=h, w=w,
+                                              description=user['description'])
+                    userList.append(faceContent)
+                else:
+                    faceContent = FaceContent(id='Unknown', name='Unknown', x=x, y=y, h=h, w=w,
+                                              description='Unknown')
+                    userList.append(faceContent)
             # print(json.dumps(userList, cls=FaceContentJSONEncoder))
             socket.send(json.dumps(userList, cls=FaceContentJSONEncoder))
         except geventwebsocket.exceptions.WebSocketError as e:

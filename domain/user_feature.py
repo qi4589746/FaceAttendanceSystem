@@ -6,3 +6,4 @@ class UserFeature:
         self.feature = feature
         self.userId = userId
         self.id = id
+        self.update = updateTime

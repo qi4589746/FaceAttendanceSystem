@@ -96,4 +96,11 @@ def _getFacesData(image):
     rgb_frame = image[:, :, ::-1]
     face_locations = face_recognition.face_locations(rgb_frame)
     face_encodings = face_recognition.face_encodings(rgb_frame, face_locations)
-    return zip(face_locations, face_encodings)
+    output = []
+    for location, encoding in zip(face_locations, face_encodings):
+        output.append((location, encoding))
+    return output
+
+
+def _compareFeature(feature1, feature2):
+    return face_recognition.face_distance([feature1], feature2)
