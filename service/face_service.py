@@ -22,7 +22,9 @@ def _updateModelBySubjectId(subjectId: str):
 
 
 def _removeModelBySubjectId(subjectId: str):
-    del _subjectModels[subjectId]
+    if subjectId in _subjectModels.keys():
+        del _subjectModels[subjectId]
+        print('remove ' + subjectId)
 
 
 def _recognizeByImageAndSubjectId(subjectId: str, image, match_rate: float = 0.5, resize_rate: float = 0.5):

@@ -47,6 +47,11 @@ from controller.image_con import mod as imageModule
 app.register_blueprint(imageModule)
 
 #
+from controller.streamingConfiger_con import mod as streamingConModule
+
+app.register_blueprint(streamingConModule)
+
+#
 import service.face_service as faceService
 faceService._updateAllModel()
 
@@ -64,7 +69,10 @@ sockets.register_blueprint(videoStream)
 from gevent import pywsgi
 from geventwebsocket.handler import WebSocketHandler
 
-server = pywsgi.WSGIServer(('', 5000), app, handler_class=WebSocketHandler)
+import os
+
+port = int(os.environ.get("PORT", 5000))
+server = pywsgi.WSGIServer(('', port), app, handler_class=WebSocketHandler)
 server.serve_forever()
 
 # if __name__ == "__main__":

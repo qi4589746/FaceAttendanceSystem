@@ -14,6 +14,7 @@ import repository.user_rep as userRep
 import service.face_service as FaceService
 import service.face_service as faceService
 from agent import id_generator as ig
+from agent import streamingConfiger as streamingCon
 from agent import time_generator as tg
 from domain.model import Model
 from domain.subject_model import SubjectModel
@@ -62,8 +63,8 @@ class FaceContentJSONEncoder(json.JSONEncoder):
 def registerUser_demo(socket):
     userList = []
     counter = 0
-    waitFrame = 5
-    featureLimit = 5
+    waitFrame = int(streamingCon.waitFrame)
+    featureLimit = int(streamingCon.featureLimit)
     message = socket.receive()
     message = eval(message)
     try:
@@ -98,7 +99,8 @@ def registerUser_demo(socket):
                         counter += 1
                         if counter == waitFrame:
                             counter = 0
-                            if faceService._compareFeature(registerFeature[0], facesData[0][1]) < 0.5:
+                            if faceService._compareFeature(registerFeature[0], facesData[0][1]) < (
+                            float(streamingCon.match_rate + 0.1)):
                                 registerFeature.append(facesData[0][1])
                                 featureLimit -= 1
                         if featureLimit == 0:
@@ -148,7 +150,7 @@ def recognitionUser_demo(socket):
                 h = bottom - top
                 w = right - left
                 userId = faceService._recognizeByFeatureAndSubjectId(feature=faceData[1], subjectId=subjectId,
-                                                                     match_rate=0.5)
+                                                                     match_rate=int(streamingCon.match_rate))
                 if userId is not None:
                     user = userRep.findById(userId)
                     faceContent = FaceContent(id=user['id'], name=user['name'], x=x, y=y, h=h, w=w,
