@@ -11,7 +11,7 @@ mod = Blueprint('streamingConfiger_controller', __name__, url_prefix='/streaming
 @mod.route('/matchRate', methods=['POST'])
 def setMatchRate():
     matchRate = request.form['matchRate']
-    streamingCon.match_rate = matchRate
+    streamingCon.match_rate = float(matchRate)
     return str(streamingCon.match_rate), status.HTTP_200_OK
 
 
@@ -23,7 +23,7 @@ def getMatchRate():
 @mod.route('/sampling', methods=['POST'])
 def setSampling():
     sampling = request.form['sampling']
-    streamingCon.featureLimit = sampling
+    streamingCon.featureLimit = int(sampling)
     return str(streamingCon.featureLimit), status.HTTP_200_OK
 
 
